@@ -1,0 +1,132 @@
+<div class="form-overlay">
+  <div class="form-container">
+    <div class="form-header">
+      <h2>{{ titulo }}</h2>
+      <button class="btn-close" (click)="cancelar()">×</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="form-content">
+
+      <!-- Puesto -->
+      <div class="form-group">
+        <label for="puesto">Puesto *</label>
+        <input
+          type="text"
+          id="puesto"
+          formControlName="puesto"
+          class="form-control"
+          placeholder="Ingrese el nombre del puesto"
+          [class.invalid]="puesto?.invalid && puesto?.touched">
+        <div class="error-message" *ngIf="puesto?.invalid && puesto?.touched">
+          <span *ngIf="puesto?.errors?.['required']">El puesto es requerido</span>
+          <span *ngIf="puesto?.errors?.['minlength']">Mínimo 3 caracteres</span>
+          <span *ngIf="puesto?.errors?.['maxlength']">Máximo 100 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          class="form-control"
+          rows="4"
+          placeholder="Descripción detallada del puesto"
+          [class.invalid]="descripcion?.invalid && descripcion?.touched"></textarea>
+        <div class="error-message" *ngIf="descripcion?.invalid && descripcion?.touched">
+          <span *ngIf="descripcion?.errors?.['required']">La descripción es requerida</span>
+          <span *ngIf="descripcion?.errors?.['minlength']">Mínimo 10 caracteres</span>
+          <span *ngIf="descripcion?.errors?.['maxlength']">Máximo 255 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Salario y Estado en misma fila -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="salario">Salario *</label>
+          <input
+            type="number"
+            id="salario"
+            formControlName="salario"
+            class="form-control"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            [class.invalid]="salario?.invalid && salario?.touched">
+          <div class="error-message" *ngIf="salario?.invalid && salario?.touched">
+            <span *ngIf="salario?.errors?.['required']">El salario es requerido</span>
+            <span *ngIf="salario?.errors?.['min']">El salario debe ser mayor o igual a 0</span>
+          </div>
+        </div>
+
+        <!-- Estado solo visible cuando se edita -->
+
+
+        <!-- Espacio vacío para mantener el layout cuando Estado está oculto -->
+        <div class="form-group" *ngIf="!mostrarCampoEstado"></div>
+      </div>
+
+      <!-- Departamento (Select con nombres) -->
+      <div class="form-group">
+        <label for="departamento_id">Departamento *</label>
+
+        <!-- Loading state -->
+        <div *ngIf="cargandoDepartamentos" class="loading-select">
+          <div class="spinner-small"></div>
+          Cargando departamentos...
+        </div>
+
+        <!-- Select de departamentos -->
+        <select
+          id="departamento_id"
+          formControlName="departamento_id"
+          class="form-control"
+          [class.invalid]="departamento_id?.invalid && departamento_id?.touched"
+          [disabled]="cargandoDepartamentos"
+          *ngIf="!cargandoDepartamentos">
+          <option value="">Seleccione un departamento</option>
+          <option *ngFor="let dep of departamentos" [value]="dep.id">
+            {{ dep.nombre }}
+          </option>
+        </select>
+
+        <div class="error-message" *ngIf="departamento_id?.invalid && departamento_id?.touched">
+          <span *ngIf="departamento_id?.errors?.['required']">El departamento es requerido</span>
+        </div>
+
+        <!-- Error al cargar departamentos -->
+        <div *ngIf="!cargandoDepartamentos && departamentos.length === 0" class="error-message">
+          No se pudieron cargar los departamentos. Por favor, intente más tarde.
+        </div>
+      </div>
+
+
+      <!-- Fechas opcionales en misma fila -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fecha_ocupacion">Fecha de Ocupación</label>
+          <input
+            type="date"
+            id="fecha_ocupacion"
+            formControlName="fecha_ocupacion"
+            class="form-control">
+          <small class="help-text">Fecha cuando se ocupa el puesto</small>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancelar()">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="form.invalid || guardando || cargandoDepartamentos">
+          {{ guardando ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

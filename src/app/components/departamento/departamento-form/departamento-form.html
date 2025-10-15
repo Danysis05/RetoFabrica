@@ -1,0 +1,79 @@
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>{{ titulo }}</h3>
+      <button type="button" class="btn-cerrar" (click)="cancelar()">×</button>
+    </div>
+
+    <!-- ✅ DEBUG INFO - Diferente para cada modo -->
+    <div *ngIf="esEdicion && departamento" class="debug-info"
+         style="background: #e3f2fd; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #2196f3;">
+      <strong>🔍 Modo Edición</strong>
+      <div>ID del departamento: <strong>{{ departamento.id }}</strong></div>
+      <div>Editando: <strong>{{ departamento.nombre }}</strong></div>
+      <div>Código actual: <strong>{{ departamento.codigo }}</strong></div>
+    </div>
+
+    <div *ngIf="!esEdicion" class="debug-info"
+         style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #4caf50;">
+      <strong>🔍 Modo Creación</strong>
+      <div>El código del departamento se generará automáticamente</div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <!-- Campo Nombre -->
+      <div class="form-group">
+        <label for="nombre">Nombre del Departamento *</label>
+        <input
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          placeholder="Ingrese el nombre del departamento"
+          [class.error]="nombre?.invalid && nombre?.touched"
+        />
+        <div class="error-message" *ngIf="nombre?.invalid && nombre?.touched">
+          <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="nombre?.errors?.['minlength']">Mínimo 2 caracteres</span>
+        </div>
+      </div>
+
+      <!-- ✅ Campo Código SOLO en edición -->
+
+
+      <!-- Campo Descripción -->
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          placeholder="Ingrese una descripción del departamento"
+          rows="4"
+          [class.error]="descripcion?.invalid && descripcion?.touched"
+        ></textarea>
+        <div class="error-message" *ngIf="descripcion?.invalid && descripcion?.touched">
+          <span *ngIf="descripcion?.errors?.['required']">La descripción es requerida</span>
+          <span *ngIf="descripcion?.errors?.['minlength']">Mínimo 5 caracteres</span>
+        </div>
+      </div>
+
+      <div class="botones">
+        <button
+          type="button"
+          class="btn btn-cancelar"
+          (click)="cancelar()"
+          [disabled]="guardando"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-guardar"
+          [disabled]="form.invalid || guardando"
+        >
+          <span *ngIf="guardando">Guardando...</span>
+          <span *ngIf="!guardando">{{ esEdicion ? 'Actualizar' : 'Crear' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

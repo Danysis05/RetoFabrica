@@ -1,0 +1,115 @@
+.container {
+  padding: 20px;
+  background-color: #f4f8fb; /* azul muy claro */
+  color: #0a1f44; /* azul oscuro */
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  color: #007bff; /* azul moderno */
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-agregar {
+  background-color: #007bff;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.btn-agregar:hover {
+  background-color: #0056b3;
+}
+
+.btn-editar {
+  background-color: #17a2b8;
+  color: white;
+  margin-right: 5px;
+}
+
+.btn-editar:hover {
+  background-color: #117a8b;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #a71d2a;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #e9f2fb;
+}
+
+tr:hover {
+  background-color: #d0e4fb;
+  transition: 0.2s;
+}
+
+.empleados-lista {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.empleados-lista li {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #0a1f44;
+}
+/* departamento-lista.css o styles.css global */
+
+/* SnackBar éxito (verde) */
+.snackbar-success {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* SnackBar error (rojo) */
+.snackbar-error {
+  background-color: #f44336;
+  color: white;
+}
+
+/* SnackBar info (azul) */
+.snackbar-info {
+  background-color: #2196f3;
+  color: white;
+}
+
+/* SnackBar warning (naranja) */
+.snackbar-warning {
+  background-color: #ff9800;
+  color: white;
+}

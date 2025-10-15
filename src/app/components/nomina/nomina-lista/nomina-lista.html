@@ -1,0 +1,158 @@
+<!-- nomina-lista.html - CON FILTROS Y BOTÓN DE LIMPIAR -->
+<div class="nomina-container">
+  <!-- Header con título y botón -->
+  <div class="nomina-header">
+    <div class="header-content">
+      <h1 class="nomina-title">Gestión de Nóminas</h1>
+      <p class="nomina-subtitle">Administra y visualiza todas las nóminas del sistema</p>
+    </div>
+    <button mat-raised-button color="primary" class="create-btn" (click)="crear()">
+      <span class="btn-icon">+</span>
+      Nueva Nómina
+    </button>
+  </div>
+
+  <!-- 🔍 Panel de filtros -->
+  <div class="filter-container" *ngIf="!cargando">
+    <form [formGroup]="filtroForm" class="filter-form">
+      <div class="filter-field">
+        <label>Empleado</label>
+        <input type="text" formControlName="empleado" placeholder="Buscar por nombre o ID" />
+      </div>
+
+      <div class="filter-field">
+        <label>Desde</label>
+        <input type="date" formControlName="fechaDesde" />
+      </div>
+
+      <div class="filter-field">
+        <label>Hasta</label>
+        <input type="date" formControlName="fechaHasta" />
+      </div>
+
+      <!-- 🔄 Botón de limpiar filtros -->
+      <div class="filter-actions">
+        <button type="button"
+                mat-raised-button
+                color="accent"
+                class="clear-btn"
+                (click)="limpiarFiltros()">
+          🔄 Limpiar filtros
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Panel de estadísticas -->
+  <div class="stats-container" *ngIf="!cargando && nominasFiltradas.length > 0">
+    <div class="stat-card">
+      <div class="stat-value">{{ nominasFiltradas.length }}</div>
+      <div class="stat-label">Total Nóminas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ getTotalPagado() | currency:'USD':'symbol':'1.0-0' }}</div>
+      <div class="stat-label">Total Pagado</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ getPromedioSalario() | currency:'USD':'symbol':'1.0-0' }}</div>
+      <div class="stat-label">Salario Promedio</div>
+    </div>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="cargando" class="loading-container">
+    <div class="spinner-wrapper">
+      <mat-progress-spinner diameter="60" strokeWidth="4" mode="indeterminate" color="primary"></mat-progress-spinner>
+      <p class="loading-text">Cargando nóminas...</p>
+    </div>
+  </div>
+
+  <!-- Tabla moderna de nóminas -->
+  <div *ngIf="!cargando && nominasFiltradas.length > 0" class="table-container">
+    <div class="table-responsive">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th class="text-center">ID</th>
+            <th>Empleado</th>
+            <th class="text-center">Fecha Pago</th>
+            <th class="text-right">Salario Base</th>
+            <th class="text-center">Horas Extras</th>
+            <th class="text-right">Bonificaciones</th>
+            <th class="text-right">Deducciones</th>
+            <th class="text-right">Total</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let nomina of nominasFiltradas; let i = index"
+              [class.even-row]="i % 2 === 0"
+              [class.odd-row]="i % 2 === 1">
+            <td class="text-center id-cell">{{ nomina.id || 'N/A' }}</td>
+            <td class="empleado-cell">
+              <div class="empleado-info">
+                <span class="empleado-id">ID: {{ nomina.empleadoId || 'N/A' }}</span>
+                <span *ngIf="nomina.empleadoNombre" class="empleado-nombre">
+                  {{ nomina.empleadoNombre }}
+                </span>
+                <span *ngIf="!nomina.empleadoNombre" class="empleado-nombre">
+                  Empleado {{ nomina.empleadoId }}
+                </span>
+              </div>
+            </td>
+            <td class="text-center fecha-cell">
+              {{ nomina.fechaPago ? (nomina.fechaPago | date:'dd/MM/yyyy') : 'No especificada' }}
+            </td>
+            <td class="text-right amount-cell">
+              {{ (nomina.salarioBase || 0) | currency:'USD':'symbol':'1.0-0' }}
+            </td>
+            <td class="text-center horas-cell">
+              <span class="badge" [class.has-hours]="(nomina.horasExtras || 0) > 0">
+                {{ nomina.horasExtras || 0 }}
+              </span>
+            </td>
+            <td class="text-right amount-cell positive">
+              {{ (nomina.bonificaciones || 0) | currency:'USD':'symbol':'1.0-0' }}
+            </td>
+            <td class="text-right amount-cell negative">
+              {{ (nomina.deducciones || 0) | currency:'USD':'symbol':'1.0-0' }}
+            </td>
+            <td class="text-right total-cell">
+              <strong>{{ (nomina.totalPago || 0) | currency:'USD':'symbol':'1.0-0' }}</strong>
+            </td>
+            <td class="text-center actions-cell">
+              <div class="action-buttons">
+                <button mat-icon-button color="accent"
+                        class="action-btn edit-btn"
+                        (click)="editar(nomina)"
+                        matTooltip="Editar nómina"
+                        *ngIf="nomina.id">
+                  <span class="icon">✏️</span>
+                </button>
+                <button mat-icon-button color="warn"
+                        class="action-btn delete-btn"
+                        (click)="eliminar(nomina.id!)"
+                        matTooltip="Eliminar nómina"
+                        *ngIf="nomina.id">
+                  <span class="icon">🗑️</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Estado vacío -->
+  <div *ngIf="!cargando && nominasFiltradas.length === 0" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h3 class="empty-title">No hay nóminas registradas</h3>
+    <p class="empty-description">
+      Comienza creando la primera nómina del sistema para gestionar los pagos de tus empleados.
+    </p>
+    <button mat-raised-button color="primary" (click)="crear()">
+      Crear Primera Nómina
+    </button>
+  </div>
+</div>

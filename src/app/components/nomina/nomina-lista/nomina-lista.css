@@ -1,0 +1,391 @@
+/* nomina-lista.css - DISEÑO MODERNO */
+.nomina-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.nomina-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #003366 0%, #0056b3 100%);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 51, 102, 0.1);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.nomina-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: white;
+}
+
+.nomina-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.create-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Estadísticas */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 51, 102, 0.08);
+  border: 1px solid #e8f0fe;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+}
+
+.spinner-wrapper {
+  text-align: center;
+}
+
+.loading-text {
+  margin-top: 16px;
+  color: #003366;
+  font-weight: 500;
+}
+
+/* Tabla moderna */
+.table-container {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 51, 102, 0.08);
+  border: 1px solid #e8f0fe;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.modern-table th {
+  background: linear-gradient(135deg, #003366 0%, #0056b3 100%);
+  color: white;
+  font-weight: 600;
+  padding: 16px 12px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #f0f5ff;
+}
+
+/* Filas alternadas */
+.even-row {
+  background: #fafbff;
+}
+
+.odd-row {
+  background: white;
+}
+
+.even-row:hover, .odd-row:hover {
+  background: #f0f5ff;
+}
+
+/* Celdas especializadas */
+.id-cell {
+  font-weight: 600;
+  color: #003366;
+}
+
+.empleado-cell .empleado-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.empleado-id {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.empleado-nombre {
+  font-weight: 600;
+  color: #003366;
+}
+
+.amount-cell {
+  font-weight: 500;
+}
+
+.amount-cell.positive {
+  color: #10b981;
+}
+
+.amount-cell.negative {
+  color: #ef4444;
+}
+
+.total-cell {
+  font-size: 1.1rem;
+}
+
+.horas-cell .badge {
+  background: #e8f0fe;
+  color: #003366;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.horas-cell .badge.has-hours {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Botones de acción */
+.actions-cell {
+  white-space: nowrap;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.edit-btn {
+  background: #e8f0fe !important;
+}
+
+.edit-btn:hover {
+  background: #dbeafe !important;
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  background: #fee8e8 !important;
+}
+
+.delete-btn:hover {
+  background: #fecaca !important;
+  transform: scale(1.1);
+}
+
+.action-btn .icon {
+  font-size: 1rem;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 51, 102, 0.08);
+  border: 1px solid #e8f0fe;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  color: #003366;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.empty-description {
+  color: #666;
+  margin-bottom: 24px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Utilidades */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nomina-container {
+    padding: 16px;
+  }
+
+  .nomina-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .modern-table {
+    font-size: 0.875rem;
+  }
+
+  .modern-table th,
+  .modern-table td {
+    padding: 12px 8px;
+  }
+}
+.filter-container {
+  background: linear-gradient(90deg, #e9f2ff 0%, #f7fbff 100%);
+  border: 1px solid #c9ddff;
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0, 86, 179, 0.1);
+  transition: 0.3s ease all;
+}
+
+.filter-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 86, 179, 0.15);
+}
+
+/* 🔹 FORMULARIO DE FILTROS */
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+/* 🔹 CAMPOS DE FILTRO */
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+.filter-field label {
+  font-weight: 600;
+  color: #004aad;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.filter-field input {
+  border: 1px solid #b3d1ff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  transition: 0.2s;
+  background-color: #ffffff;
+  color: #002b5c;
+}
+
+.filter-field input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+/* 🔹 BOTONES DE FILTRO */
+.filter-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Botón de limpiar filtros */
+.clear-btn {
+  background-color: #007bff !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 86, 179, 0.25);
+}
+
+.clear-btn:hover {
+  background-color: #005fcc !important;
+  transform: translateY(-1px);
+}

@@ -1,0 +1,48 @@
+<div class="container">
+  <h2>Departamentos</h2>
+
+  <p *ngIf="cargando">Cargando...</p>
+
+  <button *ngIf="!cargando" (click)="nuevoDepartamento()" class="btn btn-agregar">+ Nuevo</button>
+
+  <table *ngIf="!cargando && departamentos!.length > 0" class="tabla">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Acciones</th> <!-- ✅ QUITAR columna Estado -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of departamentos">
+        <td>{{ d.id }}</td>
+        <td>{{ d.nombre }}</td>
+        <td>{{ d.codigo }}</td>
+        <td>{{ d.descripcion }}</td>
+        <td>
+          <button class="btn btn-editar" (click)="editarDepartamento(d)">Editar</button>
+
+          <!-- ✅ BOTÓN SIMPLIFICADO - Sin badges ni estados complejos -->
+          <button
+            class="btn btn-eliminar"
+            [disabled]="isDeleteDisabled(d.id!)"
+            (click)="eliminarDepartamento(d.id!, d.nombre)">
+            {{ getDeleteButtonText(d.id!) }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!cargando && departamentos!.length === 0">
+    No hay registros.
+  </p>
+
+  <app-departamentos-form
+    *ngIf="mostrarFormulario"
+    [departamento]="departamentoSeleccionado"
+    (cerrar)="cerrarFormulario($event)">
+  </app-departamentos-form>
+</div>

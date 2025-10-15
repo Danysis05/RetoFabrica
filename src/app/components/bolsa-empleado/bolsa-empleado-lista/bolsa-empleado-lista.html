@@ -1,0 +1,183 @@
+<div class="container">
+  <div class="header">
+    <h1>Bolsa de Empleo</h1>
+    <button class="btn btn-primary" (click)="nuevoEmpleo()">
+      + Nuevo Empleo
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <app-bolsa-empleado-form
+    *ngIf="mostrarFormulario"
+    [empleo]="empleoSeleccionado"
+    (cerrar)="cerrarFormulario($event)">
+  </app-bolsa-empleado-form>
+
+  <!-- Filtros -->
+  <div class="filtros-section">
+    <div class="filtros">
+      <button
+        (click)="toggleFiltroDisponibles()"
+        class="btn-filtro"
+        [class.active]="mostrarSoloDisponibles">
+        <span class="filter-icon">{{ mostrarSoloDisponibles ? '✓' : '' }}</span>
+        {{ mostrarSoloDisponibles ? 'Solo Disponibles' : 'Todos los Estados' }}
+      </button>
+
+      <select
+        class="select-filtro"
+        (change)="cambiarDepartamentoFiltro($any($event.target).value)"
+        [value]="departamentoFiltro">
+        <option value="">Todos los departamentos</option>
+        <option
+          *ngFor="let dep of departamentos"
+          [value]="dep.id || ''"
+          [disabled]="mostrarSoloDisponibles && getEmpleosDisponiblesPorDepartamento(dep.id || 0) === 0">
+          {{ dep.nombre }}
+          <span *ngIf="mostrarSoloDisponibles">
+            ({{ getEmpleosDisponiblesPorDepartamento(dep.id || 0) }})
+          </span>
+        </option>
+      </select>
+
+      <button
+        *ngIf="hayFiltrosActivos"
+        (click)="limpiarFiltros()"
+        class="btn-filtro btn-limpiar">
+        <span class="filter-icon">×</span>
+        Limpiar Filtros
+      </button>
+    </div>
+
+    <div class="filtro-info">
+      <span *ngIf="mostrarSoloDisponibles" class="info-badge">
+        🔍 Solo empleos disponibles
+      </span>
+      <span *ngIf="departamentoFiltro" class="info-badge">
+        🏢 {{ getNombreDepartamento(departamentoFiltro) }}
+      </span>
+      <span *ngIf="hayFiltrosActivos" class="info-badge resultados">
+        📊 {{ empleosFiltrados.length }} resultado{{ empleosFiltrados.length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="estadisticas">
+    <div class="stat-card">
+      <span class="stat-number">{{ getEstadisticas().total }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-card disponible">
+      <span class="stat-number">{{ getEstadisticas().disponibles }}</span>
+      <span class="stat-label">Disponibles</span>
+    </div>
+    <div class="stat-card ocupado">
+      <span class="stat-number">{{ getEstadisticas().ocupados }}</span>
+      <span class="stat-label">Ocupados</span>
+    </div>
+    <div class="stat-card cerrado">
+      <span class="stat-number">{{ getEstadisticas().cerrados }}</span>
+      <span class="stat-label">Cerrados</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando empleos...</p>
+  </div>
+
+  <!-- Grid de empleos -->
+  <div *ngIf="!cargando && empleosFiltrados && empleosFiltrados.length > 0" class="empleos-grid">
+    <div class="results-info">
+      <p>
+        Mostrando <strong>{{ empleosFiltrados.length }}</strong>
+        empleo{{ empleosFiltrados.length !== 1 ? 's' : '' }}
+        <span *ngIf="mostrarSoloDisponibles">disponible{{ empleosFiltrados.length !== 1 ? 's' : '' }}</span>
+        <span *ngIf="departamentoFiltro">en {{ getNombreDepartamento(departamentoFiltro) }}</span>
+      </p>
+    </div>
+
+    <div *ngFor="let empleo of empleosFiltrados; trackBy: trackByEmpleoId" class="empleo-card">
+      <div class="card-header">
+        <h3>{{ empleo.puesto }}</h3>
+        <span [class]="'estado-badge ' + getEstadoClass(empleo.estado)">
+          {{ empleo.estado }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <p class="descripcion">{{ empleo.descripcion }}</p>
+
+        <div class="empleo-info">
+          <div class="info-item">
+            <span class="label">Salario:</span>
+            <span class="value">${{ empleo.salario | number:'1.2-2' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Departamento:</span>
+            <span class="value">{{ getNombreDepartamento(empleo.departamento_id) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Publicación:</span>
+            <span class="value">{{ (empleo.fecha_publicacion | date:'dd/MM/yyyy') || 'No especificada' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-edit" (click)="editarEmpleo(empleo)">
+          Editar
+        </button>
+        <button
+          class="btn btn-delete"
+          (click)="empleo.id ? eliminarEmpleo(empleo.id) : null"
+          [disabled]="!empleo.id">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado vacío -->
+  <div *ngIf="!cargando && hayFiltrosActivos && empleosFiltrados.length === 0" class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>No hay resultados</h3>
+    <p>No se encontraron empleos con los filtros aplicados.</p>
+    <button class="btn btn-primary" (click)="limpiarFiltros()">
+      Limpiar Filtros
+    </button>
+  </div>
+
+  <div *ngIf="!cargando && !hayFiltrosActivos && mostrarSoloDisponibles && empleosFiltrados.length === 0" class="empty-state">
+    <div class="empty-icon">💼</div>
+    <h3>No hay empleos disponibles</h3>
+    <p>Todos los puestos están ocupados o cerrados en este momento.</p>
+    <button class="btn btn-primary" (click)="nuevoEmpleo()">
+      Crear Nuevo Empleo
+    </button>
+  </div>
+
+  <div *ngIf="!cargando && !hayFiltrosActivos && !mostrarSoloDisponibles && empleosFiltrados.length === 0" class="empty-state">
+    <div class="empty-icon">💼</div>
+    <h3>No hay empleos en la bolsa</h3>
+    <p>Comienza agregando un nuevo empleo a la bolsa</p>
+    <button class="btn btn-primary" (click)="nuevoEmpleo()">
+      Crear Primer Empleo
+    </button>
+  </div>
+
+  <div *ngIf="!cargando && empleos" class="debug-info">
+    <small>
+      Empleos cargados: {{ empleos.length }} |
+      Mostrando: {{ empleosFiltrados.length }} |
+      Departamentos: {{ departamentos.length }}
+    </small>
+  </div>
+
+  <!-- 🔔 Bloque opcional para mostrar error de backend directamente -->
+  <div *ngIf="ultimoError" class="alerta-error">
+    ⚠️ {{ ultimoError }}
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="form-container">
+  <h3>{{ nomina?.id ? 'Editar Nómina' : 'Crear Nómina' }}</h3>
+
+  <div *ngIf="getMensajeAdvertencia()" class="advertencia">
+    {{ getMensajeAdvertencia() }}
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="form-group">
+      <label>Empleado *</label>
+      <select formControlName="empleadoId">
+        <option value="">-- Seleccione un empleado --</option>
+        <option *ngFor="let e of empleados" [value]="e.id">
+          {{ e.nombre }} {{ e.apellido }} ({{ e.bolsaEmpleo?.puesto || e.bolsaPuesto || 'SIN PUESTO' }})
+        </option>
+      </select>
+      <div *ngIf="form.get('empleadoId')?.invalid && form.get('empleadoId')?.touched" class="error">
+        Debe seleccionar un empleado
+      </div>
+    </div>
+
+    <div class="info-panel" *ngIf="form.get('empleadoId')?.value">
+      <h4>Información de Cálculo</h4>
+      <div class="info-row">
+        <span class="info-label">Salario Base:</span>
+        <span class="info-value">{{ salarioBaseCalculado | currency:'USD' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Bonificaciones:</span>
+        <span class="info-value">{{ bonificacionesCalculadas | currency:'USD' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Deducciones:</span>
+        <span class="info-value">{{ deduccionesCalculadas | currency:'USD' }}</span>
+      </div>
+      <div class="info-row total">
+        <span class="info-label">Total a Pagar:</span>
+        <span class="info-value">{{ totalPagoCalculado | currency:'USD' }}</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Horas Extras</label>
+      <input type="number" formControlName="horasExtras" min="0" step="0.5" />
+    </div>
+
+    <div class="form-group">
+      <label>Días Faltantes</label>
+      <input type="number" formControlName="diasFaltantes" min="0" />
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn-guardar"
+        [disabled]="guardando || form.invalid || !empleadoTienePuesto(form.get('empleadoId')?.value)">
+        {{ guardando ? 'Guardando...' : (nomina?.id ? 'Actualizar' : 'Crear') }}
+      </button>
+      <button type="button" class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</div>
