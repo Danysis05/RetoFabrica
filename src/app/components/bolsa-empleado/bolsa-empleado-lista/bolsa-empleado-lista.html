@@ -121,7 +121,11 @@
           </div>
           <div class="info-item">
             <span class="label">Publicación:</span>
-            <span class="value">{{ (empleo.fecha_publicacion | date:'dd/MM/yyyy') || 'No especificada' }}</span>
+            <span class="value">{{ (empleo.fecha_publicacion| date:'dd/MM/yyyy') || 'No especificada' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Fecha de Ocupación</span>
+            <span class="value">{{ (empleo.fecha_ocupacion| date:'dd/MM/yyyy') || 'No especificada' }}</span>
           </div>
         </div>
       </div>

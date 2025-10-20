@@ -44,4 +44,7 @@ export class NominaService {
     // ✅ CORREGIDO: Usar el formato :id en la URL
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+    getEmpleadoInfo(empleadoId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/empleado-info?empleadoId=${empleadoId}`);
+  }
 }

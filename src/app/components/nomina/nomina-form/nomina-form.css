@@ -4,9 +4,14 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 102, 255, 0.2);
-  max-width: 520px;
-  margin: auto;
+  width: 410px;
+  width: 86%;
   font-family: 'Segoe UI', sans-serif;
+  max-height: 80vh; /* Altura máxima relativa a la ventana */
+  overflow-y: auto; /* Activa la barra de desplazamiento vertical */
+  scrollbar-width: thin; /* Scroll más delgado (para Firefox) */
+  scrollbar-color: #3b82f6 #1e293b;
+
 }
 
 h3 {
@@ -132,4 +137,21 @@ input:focus {
   color: white;
   border-color: #3b82f6;
   box-shadow: 0 0 5px rgba(59, 130, 246, 0.4);
+}
+.form-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.form-container::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+  background-color: #2563eb;
 }

@@ -27,6 +27,7 @@
             type="text"
             id="nombre"
             formControlName="nombre"
+            maxlength="100"
             class="form-control"
             placeholder="Ingrese el nombre"
             [class.invalid]="nombre?.invalid && nombre?.touched">
@@ -44,6 +45,7 @@
             id="apellido"
             formControlName="apellido"
             class="form-control"
+            maxlength="100"
             placeholder="Ingrese el apellido"
             [class.invalid]="apellido?.invalid && apellido?.touched">
           <div class="error-message" *ngIf="apellido?.invalid && apellido?.touched">
@@ -72,6 +74,7 @@
           <input
             [type]="getTipoInputDocumento()"
             id="documentoNumero"
+            maxlength="10"
             formControlName="documentoNumero"
             [attr.maxlength]="documentoTipo?.value === 'Pasaporte' ? 12 : 10"
             [attr.inputmode]="getTipoInputDocumento() === 'number' ? 'numeric' : 'text'"
@@ -128,7 +131,7 @@
             type="tel"
             id="telefono"
             formControlName="telefono"
-            maxlength="20"
+            maxlength="10"
             class="form-control"
             placeholder="Número de teléfono"
             [class.invalid]="telefono?.invalid && telefono?.touched">
