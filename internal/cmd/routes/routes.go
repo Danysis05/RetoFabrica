@@ -40,21 +40,11 @@ func Register(s *ghttp.Server) {
 		group.DELETE("/:id", controller.BolsaController.Eliminar)
 	})
 	s.Group("/nomina", func(group *ghttp.RouterGroup) {
-		// Obtener todas las nóminas
 		group.GET("/all", controller.NominaShowAll)
-
-		// Crear una nueva nómina
 		group.POST("/create", controller.NominaCreate)
-
-		// Actualizar una nómina existente por ID
 		group.PUT("/:id", controller.NominaUpdate)
-
-		// Eliminar una nómina por ID
 		group.DELETE("/:id", controller.NominaDelete)
-
-		// ✅ AGREGAR: Obtener nómina por ID
 		group.GET("/:id", controller.NominaGetByID)
-
-		// (Opcional) Obtener nóminas por departamento
+		group.GET("/empleado-info", controller.NominaGetEmpleadoInfo)
 	})
 }

@@ -1,4 +1,4 @@
-// 📁 entity/nomina.go
+// 📁 entity/nomina.go - CORREGIDO
 package entity
 
 import "time"
@@ -10,6 +10,7 @@ type Nomina struct {
 	FechaPago      time.Time  `json:"fecha_pago" orm:"fecha_pago" description:"Fecha de pago"`
 	SalarioBase    float64    `json:"salario_base" orm:"salario_base" description:"Salario base"`
 	HorasExtras    float64    `json:"horas_extras" orm:"horas_extras" description:"Horas extras"`
+	DiasFaltantes  int        `json:"dias_faltantes" orm:"dias_faltantes" description:"Días faltantes"` // ✅ AGREGADO
 	Bonificaciones float64    `json:"bonificaciones" orm:"bonificaciones" description:"Bonificaciones"`
 	Deducciones    float64    `json:"deducciones" orm:"deducciones" description:"Deducciones"`
 	TotalPago      float64    `json:"total_pago" orm:"total_pago" description:"Total a pagar"`

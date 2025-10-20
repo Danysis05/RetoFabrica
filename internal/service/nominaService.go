@@ -79,6 +79,7 @@ func (s *nominaService) Create(ctx context.Context, nomina *entity.Nomina, horas
 	nomina.HorasExtras = horasExtras
 	valorHora := nomina.SalarioBase / 240
 	nomina.Bonificaciones = horasExtras * valorHora * 1.5
+	diasFaltantes = nomina.DiasFaltantes
 	nomina.Deducciones = float64(diasFaltantes) * (nomina.SalarioBase / 30)
 	nomina.TotalPago = nomina.SalarioBase + nomina.Bonificaciones - nomina.Deducciones
 	nomina.FechaPago = time.Now()
@@ -86,7 +87,7 @@ func (s *nominaService) Create(ctx context.Context, nomina *entity.Nomina, horas
 	fmt.Printf("🧮 [NOMINA SERVICE] Create - Cálculos: SalarioBase=%.2f, Bonificaciones=%.2f, Deducciones=%.2f, TotalPago=%.2f\n",
 		nomina.SalarioBase, nomina.Bonificaciones, nomina.Deducciones, nomina.TotalPago)
 
-	// Guardar en BD usando GoFrame DAO
+	// Guardar
 	if err := dao.Nominas.Create(ctx, nomina); err != nil {
 		fmt.Printf("❌ [NOMINA SERVICE] Create - Error al guardar en BD: %v\n", err)
 		return nil, err

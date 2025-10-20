@@ -19,7 +19,6 @@ func (d *departamentosService) GetById(ctx context.Context, id int) (*entity.Dep
 	return dao.Departamentos().GetById(ctx, id)
 }
 
-// ✅ OPCIÓN 1: Solo datos básicos (PARA FORMULARIOS)
 func (d *departamentosService) GetAllBasic(ctx context.Context) ([]*entity.Departamento, error) {
 	deps, err := dao.Departamentos().GetAllBasic(ctx)
 	if err != nil {
@@ -33,7 +32,6 @@ func (d *departamentosService) GetAllBasic(ctx context.Context) ([]*entity.Depar
 	return deps, nil
 }
 
-// ✅ OPCIÓN 2: Con empleos (PARA REPORTES)
 func (d *departamentosService) GetAllWithEmpleos(ctx context.Context) ([]*entity.Departamento, error) {
 	deps, err := dao.Departamentos().GetAllWithEmpleos(ctx)
 	if err != nil {
@@ -47,7 +45,6 @@ func (d *departamentosService) GetAllWithEmpleos(ctx context.Context) ([]*entity
 	return deps, nil
 }
 
-// ✅ OPCIÓN 3: Departamento específico con empleos
 func (d *departamentosService) GetWithEmpleos(ctx context.Context, id int) (*entity.Departamento, error) {
 	dep, err := dao.Departamentos().GetWithEmpleos(ctx, id)
 	if err != nil {
@@ -58,7 +55,6 @@ func (d *departamentosService) GetWithEmpleos(ctx context.Context, id int) (*ent
 	return dep, nil
 }
 
-// ✅ MÉTODO COMPATIBLE (por defecto sin empleos)
 func (d *departamentosService) GetAll(ctx context.Context) ([]*entity.Departamento, error) {
 	return d.GetAllBasic(ctx)
 }
@@ -67,7 +63,6 @@ func (d *departamentosService) Create(ctx context.Context, departamento *entity.
 	fmt.Printf("=== CREAR DEPARTAMENTO ===\n")
 	fmt.Printf("📥 Departamento a crear: %s\n", departamento.Nombre)
 
-	// ✅ Listar todos los departamentos existentes primero (debug)
 	fmt.Println("=== DEPARTAMENTOS EXISTENTES ===")
 	todos, _ := dao.Departamentos().GetAllBasic(ctx)
 	for i, dep := range todos {
@@ -75,7 +70,6 @@ func (d *departamentosService) Create(ctx context.Context, departamento *entity.
 			i+1, dep.ID, dep.Nombre, dep.Codigo)
 	}
 
-	// ✅ Verificar si ya existe un departamento con ese nombre
 	existente, err := dao.Departamentos().FindByName(ctx, departamento.Nombre)
 	if err != nil {
 		fmt.Printf("❌ Error buscando por nombre: %v\n", err)
@@ -90,7 +84,6 @@ func (d *departamentosService) Create(ctx context.Context, departamento *entity.
 		fmt.Printf("✅ Nombre '%s' disponible\n", departamento.Nombre)
 	}
 
-	// ✅ Generar código automáticamente
 	if departamento.Codigo == "" {
 		codigo, err := d.generarCodigo(ctx, departamento.Nombre)
 		if err != nil {
@@ -100,7 +93,6 @@ func (d *departamentosService) Create(ctx context.Context, departamento *entity.
 		fmt.Printf("✅ Código generado: %s\n", departamento.Codigo)
 	}
 
-	// ✅ Verificar si el código ya existe
 	existentePorCodigo, err := dao.Departamentos().FindByCodigo(ctx, departamento.Codigo)
 	if err != nil {
 		return err

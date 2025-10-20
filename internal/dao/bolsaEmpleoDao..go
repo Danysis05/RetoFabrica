@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"retoBack/internal/model/entity"
+	"time"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -34,13 +35,18 @@ func (d *bolsaEmpleosDao) GetById(ctx context.Context, id int) (*entity.BolsaEmp
 // ➕ Crear un nuevo registro
 func (d *bolsaEmpleosDao) Create(ctx context.Context, b *entity.BolsaEmpleo) error {
 	data := g.Map{
-		"puesto":            b.Puesto,
-		"descripcion":       b.Descripcion,
-		"salario":           b.Salario,
-		"estado":            b.Estado,
-		"departamento_id":   b.DepartamentoID,
-		"fecha_publicacion": b.FechaPublicacion,
+		"puesto":          b.Puesto,
+		"descripcion":     b.Descripcion,
+		"salario":         b.Salario,
+		"estado":          b.Estado,
+		"departamento_id": b.DepartamentoID,
 	}
+
+	// Asigna la fecha de publicación automáticamente si está vacía
+	if b.FechaPublicacion.IsZero() {
+		b.FechaPublicacion = time.Now()
+	}
+	data["fecha_publicacion"] = b.FechaPublicacion
 
 	// Solo agregar empleado_id si es mayor que 0
 	if b.EmpleadoID > 0 {

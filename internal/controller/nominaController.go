@@ -271,3 +271,78 @@ func NominaGetByID(r *ghttp.Request) {
 		"data":    nomina,
 	})
 }
+
+// Obtener información del empleado con salario para nómina
+func NominaGetEmpleadoInfo(r *ghttp.Request) {
+	fmt.Println("🎯 [CONTROLLER] NominaGetEmpleadoInfo - Iniciando...")
+
+	empleadoID := r.Get("empleadoId").Int()
+	if empleadoID == 0 {
+		fmt.Printf("❌ [CONTROLLER] NominaGetEmpleadoInfo - ID de empleado no proporcionado\n")
+		r.Response.WriteStatus(400, g.Map{
+			"success": false,
+			"error":   "ID de empleado requerido",
+		})
+		return
+	}
+
+	fmt.Printf("🔍 [CONTROLLER] NominaGetEmpleadoInfo - Buscando empleado: ID=%d\n", empleadoID)
+
+	// Obtener empleado con bolsa de empleo
+	empleado, err := service.Empleados.GetById(r.Context(), empleadoID)
+	if err != nil {
+		fmt.Printf("❌ [CONTROLLER] NominaGetEmpleadoInfo - Error: %v\n", err)
+		r.Response.WriteStatus(500, g.Map{
+			"success": false,
+			"error":   "Error al obtener empleado",
+		})
+		return
+	}
+
+	if empleado == nil {
+		fmt.Printf("❌ [CONTROLLER] NominaGetEmpleadoInfo - Empleado no encontrado: ID=%d\n", empleadoID)
+		r.Response.WriteStatus(404, g.Map{
+			"success": false,
+			"error":   "Empleado no encontrado",
+		})
+		return
+	}
+
+	// Verificar si tiene bolsa de empleo con salario
+	var salarioBase float64 = 0
+	var puesto string = ""
+	var tieneBolsaActiva bool = false
+
+	if empleado.BolsaEmpleoID > 0 {
+		bolsa, err := service.BolsaService.ObtenerPorID(r.Context(), empleado.BolsaEmpleoID)
+		if err == nil && bolsa != nil && bolsa.Estado == "OCUPADO" {
+			salarioBase = bolsa.Salario
+			puesto = bolsa.Puesto
+			tieneBolsaActiva = true
+			fmt.Printf("💰 [CONTROLLER] NominaGetEmpleadoInfo - Salario encontrado: %.2f, Puesto: %s\n", salarioBase, puesto)
+		} else {
+			fmt.Printf("⚠️ [CONTROLLER] NominaGetEmpleadoInfo - Empleado tiene BolsaEmpleoID=%d pero no se pudo cargar\n", empleado.BolsaEmpleoID)
+		}
+	} else {
+		fmt.Printf("⚠️ [CONTROLLER] NominaGetEmpleadoInfo - Empleado no tiene BolsaEmpleoID asignado\n")
+	}
+
+	response := g.Map{
+		"success": true,
+		"data": g.Map{
+			"id":               empleado.ID,
+			"nombre":           empleado.Nombre,
+			"apellido":         empleado.Apellido,
+			"documentoNumero":  empleado.DocumentoNumero,
+			"puesto":           puesto,
+			"salarioBase":      salarioBase,
+			"tieneBolsaActiva": tieneBolsaActiva,
+			"bolsaEmpleoId":    empleado.BolsaEmpleoID,
+		},
+	}
+
+	fmt.Printf("✅ [CONTROLLER] NominaGetEmpleadoInfo - Éxito: %s %s, Salario: %.2f\n",
+		empleado.Nombre, empleado.Apellido, salarioBase)
+
+	r.Response.WriteJson(response)
+}

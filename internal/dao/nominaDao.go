@@ -38,6 +38,7 @@ func (d *nominaDao) Create(ctx context.Context, nomina *entity.Nomina) error {
 		"salario_base":   nomina.SalarioBase,
 		"horas_extras":   nomina.HorasExtras,
 		"bonificaciones": nomina.Bonificaciones,
+		"dias_faltantes": nomina.DiasFaltantes,
 		"deducciones":    nomina.Deducciones,
 		"total_pago":     nomina.TotalPago,
 	}).Insert()
