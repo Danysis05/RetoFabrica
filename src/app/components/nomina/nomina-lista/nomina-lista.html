@@ -60,7 +60,7 @@
   </div>
 
   <!-- Spinner de carga -->
-  <div *ngIf="cargando" class="loading-container">
+  <div class="loading-container" *ngIf="cargando">
     <div class="spinner-wrapper">
       <mat-progress-spinner diameter="60" strokeWidth="4" mode="indeterminate" color="primary"></mat-progress-spinner>
       <p class="loading-text">Cargando nóminas...</p>
@@ -68,7 +68,7 @@
   </div>
 
   <!-- Tabla moderna de nóminas -->
-  <div *ngIf="!cargando && nominasFiltradas.length > 0" class="table-container">
+  <div class="table-container" *ngIf="!cargando && nominasFiltradas.length > 0">
     <div class="table-responsive">
       <table class="modern-table">
         <thead>
@@ -92,10 +92,12 @@
             <td class="empleado-cell">
               <div class="empleado-info">
                 <span class="empleado-id">ID: {{ nomina.empleadoId || 'N/A' }}</span>
-                <span *ngIf="nomina.empleadoNombre" class="empleado-nombre">
+
+                <span class="empleado-nombre" *ngIf="nomina.empleadoNombre">
                   {{ nomina.empleadoNombre }}
                 </span>
-                <span *ngIf="!nomina.empleadoNombre" class="empleado-nombre">
+
+                <span class="empleado-nombre" *ngIf="!nomina.empleadoNombre">
                   Empleado {{ nomina.empleadoId }}
                 </span>
               </div>
@@ -145,7 +147,7 @@
   </div>
 
   <!-- Estado vacío -->
-  <div *ngIf="!cargando && nominasFiltradas.length === 0" class="empty-state">
+  <div class="empty-state" *ngIf="!cargando && nominasFiltradas.length === 0">
     <div class="empty-icon">📊</div>
     <h3 class="empty-title">No hay nóminas registradas</h3>
     <p class="empty-description">

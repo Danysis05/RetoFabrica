@@ -8,16 +8,18 @@
     <form [formGroup]="form" (ngSubmit)="guardar()" class="form-content">
 
       <!-- Información del Puesto Asignado -->
-      <div class="puesto-info" *ngIf="getPuestoSeleccionado()">
-        <div class="info-card">
-          <h4>📋 Puesto Seleccionado</h4>
-          <div class="puesto-details">
-            <p><strong>Puesto:</strong> {{ getPuestoSeleccionado()?.puesto }}</p>
-            <p><strong>Departamento:</strong> {{ getNombreDepartamento(getPuestoSeleccionado()?.departamento_id || 0) }}</p>
-            <p><strong>Salario:</strong> ${{ getPuestoSeleccionado()?.salario | number:'1.2-2' }}</p>
+       @if (getPuestoSeleccionado()) {
+        <div class="puesto-info" >
+          <div class="info-card">
+            <h4>📋 Puesto Seleccionado</h4>
+            <div class="puesto-details">
+              <p><strong>Puesto:</strong> {{ getPuestoSeleccionado()?.puesto }}</p>
+              <p><strong>Departamento:</strong> {{ getNombreDepartamento(getPuestoSeleccionado()?.departamento_id || 0) }}</p>
+              <p><strong>Salario:</strong> ${{ getPuestoSeleccionado()?.salario | number:'1.2-2' }}</p>
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- Nombre y Apellido -->
       <div class="form-row">
@@ -31,28 +33,37 @@
             class="form-control"
             placeholder="Ingrese el nombre"
             [class.invalid]="nombre?.invalid && nombre?.touched">
-          <div class="error-message" *ngIf="nombre?.invalid && nombre?.touched">
-            <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
-            <span *ngIf="nombre?.errors?.['minlength']">Mínimo 2 caracteres</span>
-            <span *ngIf="nombre?.errors?.['maxlength']">Máximo 100 caracteres</span>
-          </div>
+            @if (nombre?.invalid && nombre?.touched) {
+              <div class="error-message" >
+                @if (nombre?.errors?.['required']) {
+                  <span>El nombre es requerido</span>
+                }
+                @if (nombre?.errors?.['minlength']) {
+                  <span>Mínimo 2 caracteres</span>
+                }
+                @if (nombre?.errors?.['maxlength']) {
+                  <span >Máximo 100 caracteres</span>
+                }
+              </div>
+            }
         </div>
 
         <div class="form-group">
           <label for="apellido">Apellido *</label>
-          <input
-            type="text"
-            id="apellido"
-            formControlName="apellido"
-            class="form-control"
-            maxlength="100"
-            placeholder="Ingrese el apellido"
-            [class.invalid]="apellido?.invalid && apellido?.touched">
-          <div class="error-message" *ngIf="apellido?.invalid && apellido?.touched">
-            <span *ngIf="apellido?.errors?.['required']">El apellido es requerido</span>
-            <span *ngIf="apellido?.errors?.['minlength']">Mínimo 2 caracteres</span>
-            <span *ngIf="apellido?.errors?.['maxlength']">Máximo 100 caracteres</span>
+          <input type="text" id="apellido" formControlName="apellido" class="form-control" maxlength="100" placeholder="Ingrese el apellido" [class.invalid]="apellido?.invalid && apellido?.touched">
+          @if (apellido?.invalid && apellido?.touched) {
+          <div class="error-message">
+            @if (apellido?.errors?.['required']) {
+              <span>El apellido es requerido</span>
+            }
+            @if (apellido?.errors?.['minlength']) {
+              <span>Mínimo 2 caracteres</span>
+            }
+            @if (apellido?.errors?.['maxlength']) {
+              <span>Máximo 100 caracteres</span>
+            }
           </div>
+          }
         </div>
       </div>
 
@@ -65,9 +76,12 @@
             formControlName="documentoTipo"
             class="form-control"
             [class.invalid]="documentoTipo?.invalid && documentoTipo?.touched">
-            <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
+            @for (tipo of tiposDocumento; track tipo) {
+              <option [value]="tipo">{{ tipo }}</option>
+            }
           </select>
         </div>
+
 
         <div class="form-group">
           <label for="documentoNumero">Número de Documento *</label>
@@ -82,80 +96,94 @@
             placeholder="Ingrese el número de documento"
             [class.invalid]="documentoNumero?.invalid && documentoNumero?.touched">
 
-          <div class="error-message" *ngIf="documentoNumero?.invalid && documentoNumero?.touched">
-            <span *ngIf="documentoNumero?.errors?.['required']">El documento es requerido</span>
-            <span *ngIf="documentoNumero?.errors?.['pattern']">Formato inválido (solo números o letras)</span>
-            <span *ngIf="documentoNumero?.errors?.['maxlength']">Demasiados caracteres</span>
-            <span *ngIf="documentoNumero?.errors?.['minlength']">Muy pocos caracteres</span>
-          </div>
+          @if (documentoNumero?.invalid && documentoNumero?.touched) {
+            <div class="error-message">
+              @if (documentoNumero?.errors?.['required']) {
+                <span >El documento es requerido</span>
+              }
+              @if (documentoNumero?.errors?.['pattern']) {
+                <span>Formato inválido (solo números o letras)</span>
+              }
+              @if (documentoNumero?.errors?.['maxlength']) {
+              <span >Demasiados caracteres</span>
+              }
+              @if (documentoNumero?.errors?.['minlength']) {
+                <span >Muy pocos caracteres</span>
+              }
+            </div>
+          }
         </div>
       </div>
 
       <!-- Correo -->
       <div class="form-group">
         <label for="correoElectronico">Correo Electrónico *</label>
-        <input
-          type="email"
-          id="correoElectronico"
-          formControlName="correoElectronico"
-          class="form-control"
-          placeholder="correo@ejemplo.com"
-          [class.invalid]="correoElectronico?.invalid && correoElectronico?.touched">
-        <div class="error-message" *ngIf="correoElectronico?.invalid && correoElectronico?.touched">
-          <span *ngIf="correoElectronico?.errors?.['required']">El correo es requerido</span>
-          <span *ngIf="correoElectronico?.errors?.['email']">Formato de correo inválido</span>
+        <input type="email" id="correoElectronico" formControlName="correoElectronico" class="form-control" placeholder="correo@ejemplo.com" [class.invalid]="correoElectronico?.invalid && correoElectronico?.touched">
+
+        @if (correoElectronico?.invalid && correoElectronico?.touched) {
+        <div class="error-message" >
+          @if (correoElectronico?.errors?.['required']) {
+            <span>El correo es requerido</span>
+          }
+          @if (correoElectronico?.errors?.['email']) {
+            <span>Formato de correo inválido</span>
+          }
         </div>
+        }
       </div>
 
       <!-- Ciudad y Teléfono -->
       <div class="form-row">
         <div class="form-group">
           <label for="ciudad">Ciudad *</label>
-          <input
-            type="text"
-            id="ciudad"
-            formControlName="ciudad"
-            class="form-control"
-            placeholder="Ciudad de residencia"
-            [class.invalid]="ciudad?.invalid && ciudad?.touched">
-          <div class="error-message" *ngIf="ciudad?.invalid && ciudad?.touched">
-            <span *ngIf="ciudad?.errors?.['required']">La ciudad es requerida</span>
-            <span *ngIf="ciudad?.errors?.['minlength']">Mínimo 2 caracteres</span>
-            <span *ngIf="ciudad?.errors?.['maxlength']">Máximo 100 caracteres</span>
-          </div>
+          <input type="text" id="ciudad" formControlName="ciudad" class="form-control" placeholder="Ciudad de residencia" [class.invalid]="ciudad?.invalid && ciudad?.touched">
+
+          @if (ciudad?.invalid && ciudad?.touched) {
+            <div class="error-message">
+
+              @if (ciudad?.errors?.['required']) {
+                <span>La ciudad es requerida</span>
+              }
+              @if (ciudad?.errors?.['minlength']) {
+                <span>Mínimo 2 caracteres</span>
+              }
+              @if (ciudad?.errors?.['maxlength']) {
+                <span>Máximo 100 caracteres</span>
+              }
+            </div>
+          }
         </div>
 
         <div class="form-group">
           <label for="telefono">Teléfono</label>
-          <input
-            type="tel"
-            id="telefono"
-            formControlName="telefono"
-            maxlength="10"
-            class="form-control"
-            placeholder="Número de teléfono"
-            [class.invalid]="telefono?.invalid && telefono?.touched">
-          <div class="error-message" *ngIf="telefono?.invalid && telefono?.touched">
-            <span *ngIf="telefono?.errors?.['maxlength']">Máximo 20 caracteres</span>
-          </div>
+          <input type="tel" id="telefono" formControlName="telefono" maxlength="10" class="form-control" placeholder="Número de teléfono" [class.invalid]="telefono?.invalid && telefono?.touched">
+          @if (telefono?.invalid && telefono?.touched) {
+            <div class="error-message">
+              @if (telefono?.errors?.['maxlength']) {
+                <span >Máximo 20 caracteres</span>
+              }
+            </div>
+          }
         </div>
       </div>
 
       <!-- Dirección -->
       <div class="form-group">
         <label for="direccion">Dirección *</label>
-        <input
-          type="text"
-          id="direccion"
-          formControlName="direccion"
-          class="form-control"
-          placeholder="Dirección completa"
-          [class.invalid]="direccion?.invalid && direccion?.touched">
-        <div class="error-message" *ngIf="direccion?.invalid && direccion?.touched">
-          <span *ngIf="direccion?.errors?.['required']">La dirección es requerida</span>
-          <span *ngIf="direccion?.errors?.['minlength']">Mínimo 5 caracteres</span>
-          <span *ngIf="direccion?.errors?.['maxlength']">Máximo 255 caracteres</span>
-        </div>
+        <input type="text" id="direccion" formControlName="direccion" class="form-control" placeholder="Dirección completa" [class.invalid]="direccion?.invalid && direccion?.touched">
+        @if (direccion?.invalid && direccion?.touched) {
+          <div class="error-message">
+            @if (direccion?.errors?.['required']){
+              <span>La dirección es requerida</span>
+            }
+            @if (direccion?.errors?.['minlength']) {
+            <span>Mínimo 5 caracteres</span>
+            }
+            @if (direccion?.errors?.['maxlength']) {
+              <span>Máximo 255 caracteres</span>
+            }
+          </div>
+        }
       </div>
 
       <!-- Asignación de Empleo -->
@@ -171,19 +199,27 @@
           <option value="">Seleccione un puesto disponible</option>
 
           <optgroup label="✅ Puestos disponibles">
-            <option *ngFor="let empleo of empleosFiltrados" [value]="empleo.id">
+
+          @for (empleo of empleosFiltrados; track empleo.id) {
+            <option [value]="empleo.id">
               {{ empleo.puesto }} - ${{ empleo.salario | number:'1.2-2' }}
             </option>
+          }
           </optgroup>
         </select>
+        @if (bolsaEmpleoID?.invalid && bolsaEmpleoID?.touched) {
+          <div class="error-message">
+            @if (bolsaEmpleoID?.errors?.['required']) {
+              <span >Debe asignar un puesto al empleado</span>
+            }
+          </div>
+        }
 
-        <div class="error-message" *ngIf="bolsaEmpleoID?.invalid && bolsaEmpleoID?.touched">
-          <span *ngIf="bolsaEmpleoID?.errors?.['required']">Debe asignar un puesto al empleado</span>
-        </div>
-
-        <div *ngIf="empleosFiltrados.length === 0 && empleosDisponibles.length > 0" class="warning-message">
-          ⚠️ No hay puestos disponibles. Todos están ocupados o no están en estado "DISPONIBLE".
-        </div>
+        @if (empleosFiltrados.length === 0 && empleosDisponibles.length > 0){
+          <div class="warning-message">
+            ⚠️ No hay puestos disponibles. Todos están ocupados o no están en estado "DISPONIBLE".
+          </div>
+        }
 
         <small class="help-text">
           💡 El empleado será asignado automáticamente a este puesto y departamento.

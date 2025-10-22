@@ -1,11 +1,16 @@
 <div class="container">
   <h2>Departamentos</h2>
 
-  <p *ngIf="cargando">Cargando...</p>
+  @if (cargando) {
+    <p>Cargando...</p>
+  }
 
-  <button *ngIf="!cargando" (click)="nuevoDepartamento()" class="btn btn-agregar">+ Nuevo</button>
+  @if (!cargando) {
+  <button (click)="nuevoDepartamento()" class="btn btn-agregar">+ Nuevo</button>
+  }
 
-  <table *ngIf="!cargando && departamentos!.length > 0" class="tabla">
+  @if (!cargando && departamentos!.length > 0) {
+  <table class="tabla">
     <thead>
       <tr>
         <th>ID</th>
@@ -35,14 +40,15 @@
       </tr>
     </tbody>
   </table>
+  }
 
-  <p *ngIf="!cargando && departamentos!.length === 0">
-    No hay registros.
-  </p>
+  @if (!cargando && departamentos!.length === 0) {
+    <p>
+      No hay registros.
+    </p>
+  }
 
-  <app-departamentos-form
-    *ngIf="mostrarFormulario"
-    [departamento]="departamentoSeleccionado"
-    (cerrar)="cerrarFormulario($event)">
-  </app-departamentos-form>
+  @if (mostrarFormulario) {
+  <app-departamentos-form  [departamento]="departamentoSeleccionado" (cerrar)="cerrarFormulario($event)"></app-departamentos-form>
+  }
 </div>

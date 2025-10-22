@@ -10,10 +10,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-bolsa-empleado-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './bolsa-empleado-form.html',
   styleUrls: ['./bolsa-empleado-form.css']
 })

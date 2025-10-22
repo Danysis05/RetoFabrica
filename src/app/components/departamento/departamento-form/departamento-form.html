@@ -6,19 +6,22 @@
     </div>
 
     <!-- ✅ DEBUG INFO - Diferente para cada modo -->
-    <div *ngIf="esEdicion && departamento" class="debug-info"
+     @if (esEdicion && departamento) {
+    <div  class="debug-info"
          style="background: #e3f2fd; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #2196f3;">
       <strong>🔍 Modo Edición</strong>
       <div>ID del departamento: <strong>{{ departamento.id }}</strong></div>
       <div>Editando: <strong>{{ departamento.nombre }}</strong></div>
       <div>Código actual: <strong>{{ departamento.codigo }}</strong></div>
     </div>
-
-    <div *ngIf="!esEdicion" class="debug-info"
+    }
+    @if (!esEdicion) {
+    <div class="debug-info"
          style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #4caf50;">
       <strong>🔍 Modo Creación</strong>
       <div>El código del departamento se generará automáticamente</div>
     </div>
+    }
 
     <form [formGroup]="form" (ngSubmit)="guardar()">
       <!-- Campo Nombre -->
@@ -31,10 +34,16 @@
           placeholder="Ingrese el nombre del departamento"
           [class.error]="nombre?.invalid && nombre?.touched"
         />
-        <div class="error-message" *ngIf="nombre?.invalid && nombre?.touched">
-          <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
-          <span *ngIf="nombre?.errors?.['minlength']">Mínimo 2 caracteres</span>
-        </div>
+        @if (nombre?.invalid && nombre?.touched) {
+          <div class="error-message" >
+            @if (nombre?.errors?.['required']) {
+              <span>El nombre es requerido</span>
+            }
+            @if (nombre?.errors?.['minlength']) {
+              <span>Mínimo 2 caracteres</span>
+            }
+          </div>
+        }
       </div>
 
       <!-- ✅ Campo Código SOLO en edición -->
@@ -50,10 +59,15 @@
           rows="4"
           [class.error]="descripcion?.invalid && descripcion?.touched"
         ></textarea>
-        <div class="error-message" *ngIf="descripcion?.invalid && descripcion?.touched">
-          <span *ngIf="descripcion?.errors?.['required']">La descripción es requerida</span>
-          <span *ngIf="descripcion?.errors?.['minlength']">Mínimo 5 caracteres</span>
-        </div>
+        @if (descripcion?.invalid && descripcion?.touched) {
+          <div class="error-message">
+            @if (descripcion?.errors?.['required']) {
+              <span>La descripción es requerida</span>
+            }
+            @if (descripcion?.errors?.['minlength']) {}
+            <span>Mínimo 5 caracteres</span>
+          </div>
+        }
       </div>
 
       <div class="botones">
@@ -70,8 +84,11 @@
           class="btn btn-guardar"
           [disabled]="form.invalid || guardando"
         >
-          <span *ngIf="guardando">Guardando...</span>
-          <span *ngIf="!guardando">{{ esEdicion ? 'Actualizar' : 'Crear' }}</span>
+        @if (guardando) {
+          <span>Guardando...</span>
+        }
+        @if (!guardando) {}
+          <span>{{ esEdicion ? 'Actualizar' : 'Crear' }}</span>
         </button>
       </div>
     </form>

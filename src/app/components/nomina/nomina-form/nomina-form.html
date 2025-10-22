@@ -10,18 +10,23 @@
       <label>Empleado *</label>
       <select formControlName="empleadoId">
         <option value="">-- Seleccione un empleado --</option>
-        <option *ngFor="let e of empleados" [value]="e.id">
-          {{ e.nombre }} {{ e.apellido }}
-          ({{ getPuestoEmpleado() }})
-        </option>
+        @for (e of empleados; track e.id) {
+          <option [value]="e.id">
+            {{ e.nombre }} {{ e.apellido }}
+            ({{ getPuestoEmpleado() }})
+          </option>
+        }
       </select>
-      <div *ngIf="form.get('empleadoId')?.invalid && form.get('empleadoId')?.touched" class="error">
-        Debe seleccionar un empleado
-      </div>
+      @if (form.get('empleadoId')?.invalid && form.get('empleadoId')?.touched) {
+        <div class="error">
+          Debe seleccionar un empleado
+        </div>
+      }
     </div>
 
     <!-- Información del empleado seleccionado -->
-    <div class="info-panel" *ngIf="form.get('empleadoId')?.value && infoEmpleadoSeleccionado">
+     @if (form.get('empleadoId')?.value && infoEmpleadoSeleccionado) {
+    <div class="info-panel">
       <h4>Información del Empleado Seleccionado</h4>
       <div class="info-row">
         <span class="info-label">Nombre:</span>
@@ -36,27 +41,32 @@
         <span class="info-value">{{ salarioBaseCalculado | currency:'USD':'symbol':'1.2-2' }}</span>
       </div>
     </div>
+    }
 
-    <!-- Loading indicator -->
-    <div *ngIf="cargandoSalario" class="loading-indicator">
-      <span>🔄 Cargando información del empleado...</span>
-    </div>
+    <!-- indicador de carga -->
+     @if (cargandoSalario) {
+      <div class="loading-indicator">
+        <span>🔄 Cargando información del empleado...</span>
+      </div>
+    }
 
-    <div class="info-panel" *ngIf="form.get('empleadoId')?.value">
-      <h4>Cálculos de Nómina</h4>
-      <div class="info-row">
-        <span class="info-label">Bonificaciones (Horas Extras):</span>
-        <span class="info-value">{{ bonificacionesCalculadas | currency:'USD':'symbol':'1.2-2' }}</span>
+    @if (form.get('empleadoId')?.value) {
+      <div class="info-panel">
+        <h4>Cálculos de Nómina</h4>
+        <div class="info-row">
+          <span class="info-label">Bonificaciones (Horas Extras):</span>
+          <span class="info-value">{{ bonificacionesCalculadas | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Deducciones (Días Faltantes):</span>
+          <span class="info-value text-danger">-{{ deduccionesCalculadas | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="info-row total">
+          <span class="info-label">Total a Pagar:</span>
+          <span class="info-value text-success">{{ totalPagoCalculado | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
       </div>
-      <div class="info-row">
-        <span class="info-label">Deducciones (Días Faltantes):</span>
-        <span class="info-value text-danger">-{{ deduccionesCalculadas | currency:'USD':'symbol':'1.2-2' }}</span>
-      </div>
-      <div class="info-row total">
-        <span class="info-label">Total a Pagar:</span>
-        <span class="info-value text-success">{{ totalPagoCalculado | currency:'USD':'symbol':'1.2-2' }}</span>
-      </div>
-    </div>
+    }
 
     <div class="form-group">
       <label>Horas Extras</label>

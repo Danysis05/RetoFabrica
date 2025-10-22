@@ -23,36 +23,43 @@
           (change)="aplicarFiltros()"
         >
           <option value="">Todos los departamentos</option>
-          <option *ngFor="let depto of departamentos" [value]="depto.id">
+          @for (depto of departamentos; track depto.id) {
+          <option  [value]="depto.id">
             {{ depto.nombre }}
           </option>
+          }
         </select>
       </div>
-
-      <button
-        *ngIf="hayFiltrosActivos"
-        (click)="limpiarFiltros()"
-        class="btn-limpiar"
-      >
+      @if (hayFiltrosActivos) {
+      <button (click)="limpiarFiltros()"class="btn-limpiar">
         ✖ Limpiar Filtros
       </button>
+      }
     </div>
 
     <div class="filtro-info">
-      <span *ngIf="filtroConEmpleo === 'true'" class="info-badge azul"
+      @if (filtroConEmpleo === 'true') {
+      <span  class="info-badge azul"
         >🔍 Con puesto</span
       >
-      <span *ngIf="filtroConEmpleo === 'false'" class="info-badge gris"
+      }
+      @if (filtroConEmpleo === 'false') {
+      <span  class="info-badge gris"
         >🔍 Sin puesto</span
       >
-      <span *ngIf="filtroDepartamento" class="info-badge azul-claro">
+      }
+      @if (filtroDepartamento) {
+      <span  class="info-badge azul-claro">
         🏢 {{ getNombreDepartamento(filtroDepartamento) }}
       </span>
-      <span *ngIf="hayFiltrosActivos" class="info-badge resultados">
+      }
+      @if (hayFiltrosActivos) {
+      <span  class="info-badge resultados">
         📊 {{ empleadosFiltradosSeguro.length }} resultado{{
           empleadosFiltradosSeguro.length !== 1 ? "s" : ""
         }}
       </span>
+      }
     </div>
   </section>
 
@@ -75,89 +82,106 @@
   </div>
 
   <!-- 🔹 Grid de empleados -->
-  <section *ngIf="hayEmpleadosFiltrados; else sinEmpleados" class="empleados-grid">
-    <article
-      class="empleado-card"
-      *ngFor="let empleado of empleadosFiltradosSeguro; trackBy: trackByEmpleado"
-    >
-      <div class="card-header">
-        <div class="empleado-nombre">
-          <h3>{{ empleado.nombre }} {{ empleado.apellido }}</h3>
-          <span
-            class="estado-badge"
-            [class.asignado]="empleado.bolsaEmpleoID"
-            [class.sin-puesto]="!empleado.bolsaEmpleoID"
-          >
-            {{ empleado.bolsaEmpleoID ? "ASIGNADO" : "SIN PUESTO" }}
-          </span>
+  @if (hayEmpleadosFiltrados) {
+  <section class="empleados-grid">
+    @for (empleado of empleadosFiltradosSeguro; track empleado.id) {
+      <article class="empleado-card">
+        <div class="card-header">
+          <div class="empleado-nombre">
+            <h3>{{ empleado.nombre }} {{ empleado.apellido }}</h3>
+            <span
+              class="estado-badge"
+              [class.asignado]="empleado.bolsaEmpleoID"
+              [class.sin-puesto]="!empleado.bolsaEmpleoID"
+            >
+              {{ empleado.bolsaEmpleoID ? "ASIGNADO" : "SIN PUESTO" }}
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div class="card-body">
-        <div class="info-item">
-          <span class="label">Documento:</span>
-          <span class="value"
-            >{{ empleado.documentoTipo }}: {{ empleado.documentoNumero }}</span
-          >
+        <div class="card-body">
+          <div class="info-item">
+            <span class="label">Documento:</span>
+            <span class="value">
+              {{ empleado.documentoTipo }}: {{ empleado.documentoNumero }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="label">Correo:</span>
+            <span class="value">{{ empleado.correoElectronico }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Teléfono:</span>
+            <span class="value">{{ empleado.telefono || "No especificado" }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Ciudad:</span>
+            <span class="value">{{ empleado.ciudad }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Puesto:</span>
+            <span
+              class="value"
+              [class.destacado]="empleado.bolsaEmpleo?.puesto"
+              [class.sin-puesto]="!empleado.bolsaEmpleoID"
+            >
+              {{ empleado.bolsaEmpleoID ? empleado.bolsaPuesto : "No asignado" }}
+            </span>
+          </div>
         </div>
-        <div class="info-item">
-          <span class="label">Correo:</span>
-          <span class="value">{{ empleado.correoElectronico }}</span>
-        </div>
-        <div class="info-item">
-          <span class="label">Teléfono:</span>
-          <span class="value">{{ empleado.telefono || "No especificado" }}</span>
-        </div>
-        <div class="info-item">
-          <span class="label">Ciudad:</span>
-          <span class="value">{{ empleado.ciudad }}</span>
-        </div>
-       <div class="info-item">
-  <span class="label">Puesto:</span>
-  <span
-    class="value"
-    [class.destacado]="empleado.bolsaEmpleo?.puesto"
-    [class.sin-puesto]="!empleado.bolsaEmpleoID"
-  >
-    {{ empleado.bolsaEmpleoID ? empleado.bolsaPuesto : "No asignado" }}
-  </span>
-</div>
 
-      </div>
-
-      <div class="card-actions">
-        <button class="btn-editar" (click)="abrirModalEditar(empleado)">
-          ✏️ Editar
-        </button>
-        <button class="btn-eliminar" (click)="eliminarEmpleado(empleado.id)">
-          🗑️ Eliminar
-        </button>
-      </div>
-    </article>
+        <div class="card-actions">
+          <button class="btn-editar" (click)="abrirModalEditar(empleado)">
+            ✏️ Editar
+          </button>
+          <button class="btn-eliminar" (click)="eliminarEmpleado(empleado.id)">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </article>
+    }
   </section>
+} @else {
+  <div class="sin-empleados">
+    @if (empleados.length === 0) {
+      <p >No hay empleados registrados.</p>
+    }
+    @if (empleados.length > 0 && empleadosFiltradosSeguro.length === 0) {
+      <p >
+        No hay empleados que coincidan con los filtros.
+      </p>
+    }
+  </div>
+}
+
 
   <!-- 🔹 Sin empleados -->
   <ng-template #sinEmpleados>
     <div class="sin-empleados">
-      <p *ngIf="empleados.length === 0">No hay empleados registrados.</p>
-      <p *ngIf="empleados.length > 0 && empleadosFiltradosSeguro.length === 0">
+      @if (empleados.length === 0) {
+      <p >No hay empleados registrados.</p>
+      }
+      @if (empleados.length > 0 && empleadosFiltradosSeguro.length === 0) {
+      <p >
         No hay empleados que coincidan con los filtros.
       </p>
+      }
     </div>
   </ng-template>
 
   <!-- 🔹 Botón inferior -->
-  <div class="add-section">
-    <button class="btn-agregar" (click)="abrirModalAgregar()">
-      + Nuevo Empleado
-    </button>
-  </div>
+  @if (empleados.length === 0) {
+    <div class="add-section" >
+      <button class="btn-agregar" (click)="abrirModalAgregar() ">
+        + Nuevo Empleado
+      </button>
+    </div>
+  }
 
   <!-- 🔹 Modal -->
-  <app-empleado-form
-    *ngIf="mostrarModal"
-    [empleado]="empleadoSeleccionado"
-    [empleosDisponibles]="empleosDisponibles"
-    (cerrar)="cerrarModal($event)"
-  ></app-empleado-form>
+   @if (mostrarModal) {
+  <app-empleado-form  [empleado]="empleadoSeleccionado" [empleosDisponibles]="empleosDisponibles"(cerrar)="cerrarModal($event)">
+
+  </app-empleado-form>
+  }
 </div>
